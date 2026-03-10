@@ -95,15 +95,19 @@ export async function getLessonBySlug(slug: string, opts?: { includeDrafts?: boo
   return null;
 }
 
-export async function getLessonNav(slug: string) {
-  const lessons = await getAllLessons();
+export async function getLessonNav(
+  slug: string,
+  opts?: { includeDrafts?: boolean }
+) {
+  const lessons = await getAllLessons(opts);
   const idx = lessons.findIndex((l) => l.slug === slug);
+
   const prev = idx >= 0 ? lessons[idx + 1] ?? null : null;
   const next = idx >= 0 ? lessons[idx - 1] ?? null : null;
+
   return { prev, next };
 }
-
-export async function getAllModules(): Promise<string[]> {
+export async function getAllModules(p0: { includeDrafts: boolean; }): Promise<string[]> {
   const lessons = await getAllLessons();
   const modules = Array.from(new Set(lessons.map((l) => l.module)));
   modules.sort((a, b) => a.localeCompare(b));
